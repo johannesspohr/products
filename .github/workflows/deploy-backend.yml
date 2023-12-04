@@ -22,7 +22,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME_PRODUCTS }}
           password: ${{ secrets.DOCKER_PASSWORD_PRODUCTS }}
       - name: Run build with Gradle Wrapper
-        working-directory: packages/products/
+        working-directory: packages/backend/
         run: ./gradlew jib
       - name: 'Deploy'
         uses: 'vimeda/helm@v1.7.0'
@@ -30,7 +30,7 @@ jobs:
           helm: helm3
           release: 'products'
           namespace: 'products'
-          chart: './packages/products/deployment/helm'
+          chart: './packages/backend/deployment/helm'
           values: |
             commit: ${{ github.sha }}
             databaseUrl: ${{ secrets.DATABASE_URL }}
