@@ -22,6 +22,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME_PRODUCTS }}
           password: ${{ secrets.DOCKER_PASSWORD_PRODUCTS }}
       - name: Run build with Gradle Wrapper
+        working-directory: ./packages/products/
         run: ./gradlew jib
       - name: 'Deploy'
         uses: 'vimeda/helm@v1.7.0'
