@@ -30,12 +30,12 @@ spec:
                   key: url
             - name: DATABASE_USERNAME
               valueFrom:
-                  secretKeyRef:
+                secretKeyRef:
                   name: database
                   key: username
             - name: DATABASE_PASSWORD
               valueFrom:
-                  secretKeyRef:
+                secretKeyRef:
                   name: database
                   key: password
           ports:
