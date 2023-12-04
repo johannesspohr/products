@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: products
+  labels:
+    app: products
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: products
+  template:
+    metadata:
+      labels:
+        app: products
+      annotations:
+        commit: {{ .Values.commit }}
+    spec:
+      imagePullSecrets:
+        - name: pull-secret
+      containers:
+        - name: products
+          image: c8n.io/johannesspohr/products:latest
+          imagePullPolicy: Always
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: database
+                  key: url
+            - name: DATABASE_USERNAME
+              valueFrom:
+                  secretKeyRef:
+                  name: database
+                  key: username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                  secretKeyRef:
+                  name: database
+                  key: password
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /products
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /products
+              port: http
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service
+  labels:
+    app: service
+spec:
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: products
+
+---
+
+# secret for DATABASE_URL
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: database
+  labels:
+    app: products
+type: Opaque
+data:
+  url: {{ .Values.databaseUrl | b64enc }}
+  username: {{ .Values.databaseUsername | b64enc }}
+  password: {{ .Values.databasePassword | b64enc }}
