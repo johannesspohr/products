@@ -7,7 +7,7 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "@/routes.tsx";
 
 OpenAPI.BASE =
-  (import.meta.env.VITE_BASE_URL as string) ?? "http://127.0.0.1:8080";
+  (import.meta.env.VITE_API_BASEPATH as string) ?? "http://127.0.0.1:8080";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
