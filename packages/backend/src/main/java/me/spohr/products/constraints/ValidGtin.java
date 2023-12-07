@@ -10,14 +10,15 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({ FIELD })
+@Target({FIELD})
 @Retention(RUNTIME)
 @Constraint(validatedBy = GtinValidator.class)
 @Documented
 public @interface ValidGtin {
 
-    String message() default "Not a valid GTIN code";
+    String message() default "Kein gültiger GTIN-Code";
 
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }
