@@ -9,7 +9,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ProductEntityControllerService } from "@/api";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx";
-import { AlertCircle, EditIcon, InfoIcon, TrashIcon } from "lucide-react";
+import { EditIcon, InfoIcon, TrashIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -20,6 +20,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog.tsx";
 import { Link } from "react-router-dom";
+import { Warning } from "@/components/Warning.tsx";
 
 export const ProductTable = () => {
   const [page, setPage] = useState(0);
@@ -81,13 +82,10 @@ export const ProductTable = () => {
           {products.isError && (
             <TableRow>
               <TableCell colSpan={3}>
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Fehler</AlertTitle>
-                  <AlertDescription>
-                    Die Produkte konnte nicht geladen werden.
-                  </AlertDescription>
-                </Alert>
+                <Warning
+                  message="Die Produkte konnten nicht geladen werden."
+                  title="Fehler"
+                />
               </TableCell>
             </TableRow>
           )}

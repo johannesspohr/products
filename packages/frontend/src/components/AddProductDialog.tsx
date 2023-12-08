@@ -31,6 +31,7 @@ export const AddProductDialog = () => {
       handleClose();
     },
   });
+
   return (
     <Dialog open={!!isVisible} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
@@ -44,7 +45,7 @@ export const AddProductDialog = () => {
         <ProductForm
           isLoading={create.isPending}
           onSubmit={create.mutate}
-          errors={(create.error as any)?.body}
+          error={create.error}
           autocompleteProductByGtin={true}
         />
       </DialogContent>

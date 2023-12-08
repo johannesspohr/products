@@ -16,6 +16,8 @@ import { DialogFooter } from "@/components/ui/dialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Loader2Icon } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
+import { isErrorApiResponse } from "@/lib/utils.ts";
+import { Warning } from "@/components/Warning.tsx";
 
 export type ProductFormData = Pick<
   ProductRequestBody,
@@ -28,12 +30,18 @@ export type Error = {
 };
 
 export const ProductForm = (props: {
-  errors?: Error[];
+  error: any;
   onSubmit: (data: ProductFormData) => void;
   isLoading: boolean;
   defaultValues?: ProductFormData;
   autocompleteProductByGtin: boolean;
 }) => {
+  const fieldErrors = isErrorApiResponse(props.error)
+    ? props.error.body
+    : undefined;
+
+  const isGenericError = props.error && !isErrorApiResponse(props.error);
+
   const form = useForm<ProductFormData>({
     defaultValues: props.defaultValues ?? {
       gtin: "",
@@ -43,17 +51,14 @@ export const ProductForm = (props: {
   });
 
   useEffect(() => {
-    // This error handling is surely not pretty, but it works for now.
-    const error =
-      props.errors && props.errors?.length > 0 ? props.errors[0] : undefined;
-    if (error) {
-      form.setError(error.field as keyof ProductFormData, {
-        message: error.message,
+    if (fieldErrors) {
+      form.setError(fieldErrors[0].field as keyof ProductFormData, {
+        message: fieldErrors[0].message,
       });
     } else {
       form.clearErrors();
     }
-  }, [props.errors, form]);
+  }, [fieldErrors, form]);
 
   const { onSubmit } = props;
   const handleSubmit = useCallback(
@@ -145,6 +150,14 @@ export const ProductForm = (props: {
               />
             </div>
           </fieldset>
+          {isGenericError && (
+            <div className="mb-4">
+              <Warning
+                message="Das Produkt konnte nicht gespeichert werden."
+                title="Fehler"
+              />
+            </div>
+          )}
           <DialogFooter>
             <Button type="submit" disabled={props.isLoading}>
               {props.isLoading && (

@@ -9,8 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ProductEntityControllerService } from "@/api";
 import { useMatch, useNavigate } from "react-router-dom";
 import { useCallback } from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx";
-import { AlertCircle } from "lucide-react";
+import { Warning } from "@/components/Warning.tsx";
 
 export const EditProductDialog = () => {
   const pathMatch = useMatch("/products/:id");
@@ -50,7 +49,7 @@ export const EditProductDialog = () => {
       <ProductForm
         isLoading={save.isPending}
         onSubmit={save.mutate}
-        errors={(save.error as any)?.body}
+        error={save.error}
         autocompleteProductByGtin={false}
         defaultValues={productData.data}
       />
@@ -63,13 +62,10 @@ export const EditProductDialog = () => {
     );
   } else if (productData.error) {
     content = (
-      <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Fehler</AlertTitle>
-        <AlertDescription>
-          Das Product konnte nicht geladen werden.
-        </AlertDescription>
-      </Alert>
+      <Warning
+        message="Das Produkt konnte nicht geladen werden."
+        title="Fehler"
+      />
     );
   }
 
